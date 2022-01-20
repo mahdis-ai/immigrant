@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    ports:
+      - '3307:3306'
+    environment:
+       MYSQL_DATABASE: 'immigrant'
+       MYSQL_USER: 'root'
+       MYSQL_ROOT_PASSWORD: 'Mahdis8731abd*y'
+    volumes:
+      -  ./immigrant/mysqld:/run/mysqld/mysqld.sock
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/immigrant
+      - ./immigrant/mysqld:/run/mysqld/mysqld.sock
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
