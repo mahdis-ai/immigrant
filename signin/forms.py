@@ -10,5 +10,6 @@ class LoginForm(forms.Form):
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     class Meta:
-        model = Applicant
+        model = Profile
         fields = ['username','phone','password']
+        

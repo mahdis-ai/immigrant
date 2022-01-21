@@ -4,7 +4,3 @@ class ApplicantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Applicant
         fields = ['username', 'password','visa_type']
-class LawyerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Lawyer
-        fields = ['first_name', 'last_name',]

@@ -1,7 +1,9 @@
 from xml.parsers.expat import model
 from django.db import models
 
-# Create your models here.
+# Create your models here.cuments
+class Document(models.Model):
+    docfile=models.FileField(upload_to='documents/')
 class Applicant(models.Model):
     work_visa='work'
     study_visa='study'

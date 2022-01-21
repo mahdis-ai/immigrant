@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 from .models import Profile
 from .forms import (LoginForm ,
                     UserRegistrationForm ,
@@ -9,7 +9,11 @@ from django.http import HttpResponse , HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from rest_framework.decorators import api_view
+from django.contrib import messages
 # Create your views here.
+
+@api_view(['GET','POST'])
 def user_login(request):
 
 
@@ -32,10 +36,8 @@ def user_login(request):
                 return HttpResponse('User Not Available')
     else:
         form = LoginForm()
+@api_view(['GET','POST'])
 def register(request):
-
-
-
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
 
@@ -43,12 +45,15 @@ def register(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
-            Applicant.objects.create(user = user)
+ 
+            Profile.objects.create(user)
+            login(request, user)
             return HttpResponseRedirect(reverse('user_login'))
     else:
         form = UserRegistrationForm()
 
 
 
-    return render(request=request, template_name="signin/register.html", context={"register_form":form})
+    return render(request, "register.html", {"register_form":form})
+    
 
