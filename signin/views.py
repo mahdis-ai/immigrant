@@ -1,5 +1,5 @@
 from django.shortcuts import render , redirect
-from .models import Profile
+from .models import   Profile
 from .forms import (LoginForm ,
                     UserRegistrationForm ,
                     )
@@ -36,6 +36,7 @@ def user_login(request):
                 return HttpResponse('User Not Available')
     else:
         form = LoginForm()
+    return render(request,"login.html", {"login_form":form})
 @api_view(['GET','POST'])
 def register(request):
     if request.method == 'POST':
@@ -43,10 +44,12 @@ def register(request):
 
         if form.is_valid():
             user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
+            user.set_password('password')
             user.save()
- 
-            Profile.objects.create(user)
+            passwd=form.cleaned_data.get('password')
+            usern=form.cleaned_data.get('username')
+            phone1=form.cleaned_data.get('phone')
+            Profile.objects.create(username=usern, phone=phone1,password=passwd)
             login(request, user)
             return HttpResponseRedirect(reverse('user_login'))
     else:

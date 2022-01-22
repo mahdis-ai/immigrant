@@ -43,10 +43,11 @@ INSTALLED_APPS = [
     'reservation',
     'debug_toolbar',
     'signin',
-    
+    'lawyer',
+    'crispy_forms',
 
 ]
-
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
@@ -63,9 +64,8 @@ INTERNAL_IPS = [
     "127.0.0.1",
     # ...
 ]
-
+SETTINGS_PATH = os.path.normpath(os.path.dirname(__file__))
 ROOT_URLCONF = 'immigrant.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

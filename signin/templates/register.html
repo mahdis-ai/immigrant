@@ -1,5 +1,10 @@
 
-
+<!doctype html>
+<html>
+	<head>
+		<title>Our signup HTML Page</title>
+		</head>
+<body>
 {% block content %} 
 
 {% load crispy_forms_tags %}         
@@ -12,7 +17,9 @@
 		{{ register_form|crispy }}                    
 		<button class="btn btn-primary" type="submit">Register</button>
 	</form>
-	<p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
+	<p class="text-center">If you already have an account, <a href="/signin/login">login</a> instead.</p>
 </div>
 
 {% endblock %}
+</body>
+</html>
