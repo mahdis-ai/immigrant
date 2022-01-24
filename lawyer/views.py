@@ -7,6 +7,6 @@ from  reservation.models import Applicant
 # Create your views here.
 @api_view()
 def applicant_list(request):
-    applicants=Applicant.objects.get()
+    applicants=Applicant.objects.all()
     serializer=ApplicantSerializer(applicants)
     return Response(serializer.data)

@@ -1,36 +1,31 @@
 from xml.parsers.expat import model
 from django.db import models
+from django.conf import settings
 
 # Create your models here.cuments
 class Document(models.Model):
     docfile=models.FileField(upload_to='documents/')
 class Applicant(models.Model):
-    work_visa='work'
-    study_visa='study'
-    VISA_CHOICES=[
-        (work_visa,'work'),
-        (study_visa,'study'),
-    ]
     username= models.CharField(max_length=255)
     phone=models.CharField(max_length=255)
     password=models.CharField(max_length=255,)
-    visa_type=models.CharField(max_length=100,choices=VISA_CHOICES,default=study_visa)
+    visa_type=models.CharField(max_length=100)
     def __str__(self):
         return self.username
 class Secretary(models.Model):
-    first_name=models.CharField(max_length=255)
-    last_name=models.CharField(max_length=255)
+    username= models.CharField(max_length=255)
+    password= models.CharField(max_length=255)
     phone = models.CharField(max_length=255)
     def __str__(self):
-        return self.first_name+" "+self.last_name
+        return self.username
 class Lawyer(models.Model):  
-    first_name=models.CharField(max_length=255)
-    last_name=models.CharField(max_length=255)
+    username=models.CharField(max_length=255)
+    password=models.CharField(max_length=255,default='adminadmin1')
     phone=models.CharField(max_length=255) 
-    reservation_schedule=models.CharField(max_length=255)
+    reservation_schedule=models.CharField(max_length=255,blank=True)
     secretary= models.ForeignKey(Secretary, on_delete=models.CASCADE)
     def __str__(self):
-        return self.first_name+" "+self.last_name
+        return self.username
 
 
 class Application(models.Model):

@@ -42,9 +42,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'reservation',
     'debug_toolbar',
-    'signin',
     'lawyer',
     'crispy_forms',
+    'accounts',
 
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -146,4 +146,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK={
     'COERCE_DECIMAL_TO_STRING' : False
 }
-
