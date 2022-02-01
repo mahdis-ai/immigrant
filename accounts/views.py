@@ -19,11 +19,10 @@ from django.views.decorators.http import \
 import time
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
-def front(request):
-    context = {
-        }
-
-    return render(request, "index.html", context)
+@api_view(['GET'])
+def index(request):
+	if request.method == 'GET': 
+		return Response(status.HTTP_200_OK)
 def get_user(model_user,username):
 	try:
 		model_user.objects.get(username=username)
