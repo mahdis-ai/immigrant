@@ -6,69 +6,94 @@ from django.contrib import messages
 from .models import CustomUser
 #from django.contrib.auth.forms import AuthenticationForm 
 from reservation.models import *
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
+from django.http import JsonResponse ,HttpResponseRedirect
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import \
+    require_POST, \
+    require_GET
+import time
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_exempt
+def front(request):
+    context = {
+        }
+
+    return render(request, "index.html", context)
 def get_user(model_user,username):
 	try:
 		model_user.objects.get(username=username)
 		return True
 	except Exception:
 		return False
+@api_view(['GET'])
 def homepage(request):
-	return render(request,"home.html")
+	if request.method == "GET":
+		print("welcome")
+		return Response(status.HTTP_200_OK)
+@api_view(['GET','POST'])
 def register_request(request):
 	if request.method == "POST":
-		user_form=UserForm(request.POST)
-		form = ProfileForm(request.POST)
-		if (form.is_valid() and user_form.is_valid()):
-			user= user_form.save()
-			#user_profile=form.save()
-			username1=user_form.cleaned_data["username"]
-			password1=user_form.cleaned_data["password"]
-			phone1=form.cleaned_data["phone"]
-			visa_type1=form.cleaned_data["visa_type"]
-			membership1=form.cleaned_data["membership"]
-			if(membership1=='lawyer'):
-				Lawyer.objects.create(username=username1, password=password1, phone=phone1,secretary_id=1)
-			elif(membership1=='applicant'):
-				if(visa_type1 is not None):
-					Applicant.objects.create(username=username1, password=password1, phone=phone1,visa_type=visa_type1)
-			else:
-				Secretary.objects.create(username=username1, password=password1, phone=phone1)
+		username=request.data['name']
+		password=request.data['pass']
+		mobile=request.data['mobile']
+		visatype=request.data['visatype']
+		position=request.data['position']
+		if username is not None and password is not None and mobile is not None and position is not None:
+			user=User.objects.create(username=username, password=password)
+	
+			if(position=='lawyer'):
+				Lawyer.objects.create(username=username, password=password, phone=mobile,secretary_id=1)
+			if(position=='applicant'):
+				if(visatype is not None):
+					Applicant.objects.create(username=username, password=password, phone=mobile,visa_type=visatype)
+			if(position=='secretary'):
+				Secretary.objects.create(username=username, password=password, phone=mobile)
 			login(request, user)
-			messages.success(request, "Registration successful." )
-			return redirect('/accounts/homepage')
-		messages.error(request, "Unsuccessful registration. Invalid information.")
-	form = ProfileForm()
-	user_form=UserForm()
-	return render (request=request, template_name="register.html", context={"profile":user_form,"register_form":form})
+			return JsonResponse({"status":"success"})
+		else:
+			messages.error(request, "Unsuccessful registration. Invalid information.")
+	return HttpResponseRedirect('/register') 
 							# Create your views here.
+@api_view(['POST'])
 def login_request(request):
 	if request.method == "POST":
-		form=AuthenticationForm(request=request,data=request.POST)
-		if form.is_valid():
-			username1 = form.cleaned_data.get('username')
-			password1= form.cleaned_data.get('password')
-			check_user=User.objects.get(username=username1, password=password1)
-			user = authenticate(username=username1, password=password1)
+		username1 = request.data['name']
+		password1 = request.data['password']
+	
+		if username1 is not None and password1 is not None:
+			try:
+				check_user=User.objects.get(username=username1, password=password1)
+			except User.DoesNotExist:
+				print("user does not exist")
+			#user = authenticate(request,username=username1, password=password1)
 			if check_user is not None:
-				login(request, user)
+				login(request, check_user)
 				user_iden2=Lawyer.objects.get(username=username1)
 				if (get_user(Applicant,username1)):
 					member = "applicant"
-					return redirect('/reservation')
-				elif(get_user(Lawyer,username1)):
+					print(member,"success")
+					return JsonResponse({"status":"success","member":member})
+				if(get_user(Lawyer,username1)):
+					
 					member ="lawyer"
-					return redirect('/lawyer/panel')
-				else:
+					print(member,"success")
+					return  JsonResponse({"status":"success","member":member})
+				if(get_user(Secretary,username1)):
 					member="secretary"
-					return redirect('/secretary')
-				
-				#messages.info(request, f"You are now logged in as {username1}.")
-				#return redirect(member,"/accounts/homepage")
+					print(member,"success")
+					return  JsonResponse({"status":"success","member":member})
+					
+					#messages.info(request, f"You are now logged in as {username1}.")
+					#return redirect(member,"/accounts/homepage")
 			else:
-				messages.error(request,"Invalid username or password.")
+				print("Invalid username or password.")
 		else:
-			print("login failed")
-			messages.error(request,"Invalid username or password.")
-	form = AuthenticationForm()
-	return render(request=request, template_name="login.html", context={"login_form":form})
+			print("Invalid !!!!!!")	
+	return HttpResponseRedirect('/login')
+
+	

@@ -8,5 +8,5 @@ from  reservation.models import Applicant
 @api_view()
 def applicant_list(request):
     applicants=Applicant.objects.all()
-    serializer=ApplicantSerializer(applicants)
+    serializer=ApplicantSerializer(applicants,many=True)
     return Response(serializer.data)

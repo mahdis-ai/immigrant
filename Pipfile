@@ -11,6 +11,7 @@ djangorestframework = "*"
 markdown = "*"
 django-filter = "*"
 django-crispy-forms = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 

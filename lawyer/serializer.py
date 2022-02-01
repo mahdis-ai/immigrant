@@ -3,4 +3,4 @@ from reservation.models import Applicant,Lawyer
 class ApplicantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Applicant
-        fields = ['username', 'password','visa_type']
+        fields = ['username','visa_type']

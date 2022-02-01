@@ -4,3 +4,4 @@ class LawyerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lawyer
         fields = ['first_name', 'last_name','reservation_schedule']
+
